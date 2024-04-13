@@ -18,10 +18,12 @@ const Dashboard = () => {
     onSuccess: () => {
       utils.getUserFiles.invalidate();
     },
-    onMutate: ({ id }) => {
+    onMutate: async ({ id }) => {
       setCurrentlyDeletingFile(id);
     },
-    onSettled: () => {},
+    onSettled() {
+      setCurrentlyDeletingFile(null);
+    },
   });
   return (
     <div className="mx-auto  max-w-7xl md:p-10 px-4">
@@ -59,7 +61,7 @@ const Dashboard = () => {
 
                 <div className="px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500">
                   <div className="flex items-center gap-2">
-                    <Plus className="h-4 w-4 cursor-pointer" />
+                    <Plus className="h-4 w-4 " />
                     {format(new Date(file.createdAt), "MMM yyyy")}
                   </div>
 
@@ -72,7 +74,11 @@ const Dashboard = () => {
                     size="sm"
                     className="w-full"
                     variant="destructive">
-                    <Trash className="w-4 h-4" />
+                    {currentlyDeletingFile === file.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </li>
